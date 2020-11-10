@@ -6,14 +6,17 @@ if ('serviceWorker' in navigator) {
 }
 
 const locationButton = document.getElementById('locationButton')
-const position = document.querySelector('#position');
+const position = document.querySelector('.position');
 
 
 function success(pos) {
     const latitude  = pos.coords.latitude;
     const longitude = pos.coords.longitude;
-    position.textContent = '';
-    position.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+    position.innerText = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+}
+
+function notAble() {
+    position.innerHTML = 'Unable to retrieve your location, please allow the browser to see your position';
 }
 
 
@@ -21,13 +24,19 @@ locationButton.addEventListener('click', () => {
     if( 'geolocation' in navigator ) {
         let geo = navigator.geolocation;
 
-        geo.getCurrentPosition(pos => {
-            success(pos);
-        })
-        geo.watchPosition (pos => {
-            success(pos);
-        })
+        geo.getCurrentPosition(
+            pos => {
+                success(pos);
+            }, error => {
+                notAble()
+            })
+        geo.watchPosition (
+            pos => {
+                success(pos);
+            }, error => {
+                notAble()
+            })
     } else {
-        status.textContent = 'Unable to retrieve your location';
+        console.log('Unable to retrieve the location')
     }
 });
