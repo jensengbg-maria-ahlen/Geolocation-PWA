@@ -5,12 +5,19 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-const locationButton = document.getElementById('locationButton')
+window.addEventListener('load', () => {
+    if ('geolocation' in navigator) {
+        locationSettings();
+    }
+})
+
+function locationSettings() {
+    const locationButton = document.getElementById('locationButton')
 
 locationButton.addEventListener('click', () => {
     const message = document.querySelector('.position');
 
-    if('geolocation' in navigator) {
+    try{
         const geo = navigator.geolocation;
 
         geo.getCurrentPosition(
@@ -25,7 +32,7 @@ locationButton.addEventListener('click', () => {
                 message.innerHTML = 'Please <em>allow</em> position and I will tell you where you are.'
             }
         )
-    } else {
+    } catch (e) {
         message.innerHTML = 'This device does not have access to the Geolocation API.'
     }
 });
@@ -59,3 +66,6 @@ function initMap(lat, lng) {
         map: googleMap
     });
 }
+
+}
+
